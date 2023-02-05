@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    container_name: strapi
+    restart: unless-stopped
+    image: "strapi:latest"
+    env_file: .env
+    build: .
+    networks:
+      - web_network
+    ports:
+      - "1337:1337"
+  nginx:
+    container_name: strapi_nginx
+    restart: always
+    image: "nginx:latest"
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    networks:
+      - web_network
+    depends_on: 
+      - app
+networks:
+  web_network:
+    driver: bridge
